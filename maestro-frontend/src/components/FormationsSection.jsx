@@ -48,9 +48,9 @@ const FormationsSection = () => {
             <img
               src="/images/students-learning.jpg"
               alt="Étudiants en situation d'apprentissage"
-              className="rounded-2xl shadow-xl w-full h-[600px] object-cover"
+              className="rounded-2xl w-full h-[600px] object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-secondary-600/20 rounded-2xl"></div>
+            <div className="absolute inset-0 rounded-2xl"></div>
           </motion.div>
 
           {/* Contenu de droite */}

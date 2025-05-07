@@ -15,47 +15,55 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import MyCourses from './pages/MyCourses';
 import ProtectedRoute from './components/ProtectedRoute';
+import useScrollToTop from './hooks/useScrollToTop';
 
+function AppContent() {
+  useScrollToTop();
+
+  return (
+    <div className="min-h-screen bg-white">
+      <Header />
+      <main>
+        <Routes>
+          <Route path="/" element={<Accueil />} />
+          <Route path="/formations" element={<Formations />} />
+          <Route path="/soutien-scolaire" element={<SoutienScolaire />} />
+          <Route path="/preparation-concours" element={<PreparationConcours />} />
+          <Route path="/formateurs" element={<Formateurs />} />
+          <Route path="/a-propos" element={<APropos />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/connexion" element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          
+          {/* Routes protégées */}
+          <Route
+            path="/profil"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/mes-cours"
+            element={
+              <ProtectedRoute>
+                <MyCourses />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
+  );
+}
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-white">
-          <Header />
-          <main>
-            <Routes>
-              <Route path="/" element={<Accueil />} />
-              <Route path="/formations" element={<Formations />} />
-              <Route path="/soutien-scolaire" element={<SoutienScolaire />} />
-              <Route path="/preparation-concours" element={<PreparationConcours />} />
-              <Route path="/formateurs" element={<Formateurs />} />
-              <Route path="/a-propos" element={<APropos />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/connexion" element={<Login />} />
-              <Route path='/register' element={<Register />} />
-              
-              {/* Routes protégées */}
-              <Route
-                path="/profil"
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/mes-cours"
-                element={
-                  <ProtectedRoute>
-                    <MyCourses />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
+        <AppContent />
       </Router>
     </AuthProvider>
   );

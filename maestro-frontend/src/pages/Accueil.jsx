@@ -13,8 +13,8 @@ const Accueil = () => {
     <div className="min-h-screen">
       <HeroSection />
       <StatsSection />
-      <FormationsSection />
       <TeachersSection />
+      <FormationsSection />
       <TestimonialsSection />
       <CommitmentsSection />
       <FAQSection />

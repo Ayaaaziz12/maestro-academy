@@ -44,6 +44,7 @@ const NewsletterSection = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
             className="text-sm text-gray-400 mt-4"
+            onClick={() => navigate('/inscription')}
           >
             En vous inscrivant, vous acceptez notre politique de confidentialité
           </motion.p>

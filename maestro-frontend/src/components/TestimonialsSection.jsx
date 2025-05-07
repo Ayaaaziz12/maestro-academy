@@ -1,144 +1,190 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaQuoteLeft, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaStar, FaStarHalfAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 const TestimonialsSection = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentSet, setCurrentSet] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
+  // Données des témoignages statiques
   const testimonials = [
     {
       id: 1,
-      name: 'Sarah Benali',
-      role: 'Élève en Terminale',
-      image: '/images/testimonials/sarah.jpg',
-      quote: 'Grâce à l\'accompagnement personnalisé, j\'ai pu progresser significativement en mathématiques. Les cours sont clairs et les exercices très bien choisis.',
-      verified: true
+      name: "Yasmine Benali",
+      location: "Rabat, Avenue de France",
+      rating: 5,
+      message: "Une expérience exceptionnelle ! Les cours sont très bien structurés et les professeurs sont à l'écoute. J'ai vraiment progressé en peu de temps.L’accompagnement est constant, on se sent soutenu à chaque étape."
     },
     {
       id: 2,
-      name: 'Mohammed El Fathi',
-      role: 'Étudiant en Prépa',
-      image: '/images/testimonials/mohammed.jpg',
-      quote: 'La préparation aux concours est excellente. Les professeurs sont très compétents et toujours disponibles pour répondre à nos questions.',
-      verified: true
+      name: "Karim El Fathi",
+      location: "Rabat, Hay Riad",
+      rating: 5,
+      message: "La qualité de l'enseignement est remarquable. Je recommande vivement ! Grâce à Le Maestro Academy, j’ai gagné en confiance et en méthode de travail."
     },
     {
       id: 3,
-      name: 'Lina Cherkaoui',
-      role: 'Élève en Première',
-      image: '/images/testimonials/lina.jpg',
-      quote: 'L\'approche pédagogique est vraiment adaptée à chaque élève. J\'ai retrouvé confiance en moi et mes résultats se sont nettement améliorés.',
-      verified: true
+      name: "Reda Cherkaoui",
+      location: "Rabat, Bab Challah",
+      rating: 5,
+      message: "Un accompagnement personnalisé qui fait toute la différence. Merci pour votre professionnalisme !Les conseils des formateurs m’ont beaucoup aidé dans mes préparations aux concours."
+    },
+    {
+      id: 4,
+      name: "Nadia Alami",
+      location: "Rabat, Hassan",
+      rating: 5,
+      message: "Une expérience enrichissante qui a transformé ma vision de la cuisine. Les cours sont bien structurés et le chef prend le temps d'expliquer chaque technique en détail. Je recommande vivement cette académie !"
+    },
+    {
+      id: 5,
+      name: "Sarah Bennani",
+      location: "Rabat, Agdal",
+      rating: 5,
+      message: "J’ai retrouvé le plaisir d’apprendre grâce à une méthode claire et motivante. Une ambiance sérieuse mais bienveillante, idéale pour apprendre."
+    },
+    {
+      id: 6,
+      name: "Mohammed Tazi",
+      location: "Rabat, Souissi",
+      rating: 5,
+      message: "L'équipe pédagogique est vraiment investie, on sent qu’on n’est pas juste un numéro. Les résultats ont suivi très rapidement. Un vrai boost pour mes études !"
     }
   ];
+
+  const testimonialsPerSet = 3;
+  const totalSets = Math.ceil(testimonials.length / testimonialsPerSet);
 
   useEffect(() => {
     let interval;
     if (isAutoPlaying) {
       interval = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+        setCurrentSet((prev) => (prev + 1) % totalSets);
       }, 5000);
     }
     return () => clearInterval(interval);
-  }, [isAutoPlaying, testimonials.length]);
+  }, [isAutoPlaying, totalSets]);
 
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+  const nextSet = () => {
+    setCurrentSet((prev) => (prev + 1) % totalSets);
+    setIsAutoPlaying(false);
   };
 
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  const prevSet = () => {
+    setCurrentSet((prev) => (prev - 1 + totalSets) % totalSets);
+    setIsAutoPlaying(false);
   };
+
+  const currentTestimonials = testimonials.slice(
+    currentSet * testimonialsPerSet,
+    (currentSet + 1) * testimonialsPerSet
+  );
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-blue-50">
+    <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <span className="text-5xl mb-4 block text-blue-500">💬</span>
-            <h2 className="text-4xl font-bold text-gray-700 mb-4">
-              Paroles d'élèves, preuves de succès
-            </h2>
-            <p className="text-lg text-gray-600">
-              Parce que chaque élève a une histoire à raconter...
-            </p>
-          </motion.div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 via-primary-500 to-primary-600">
+            Ils nous font confiance
+          </h2>
+          <p className="text-lg italic text-gray-600">
+            Découvrez les expériences de nos étudiants
+          </p>
+        </motion.div>
 
-        <div className="relative max-w-4xl mx-auto">
-          {/* Navigation buttons */}
+        <div className="relative">
+          {/* Navigation Buttons */}
           <button
-            onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 p-2 rounded-full bg-white shadow-lg hover:bg-blue-50 transition-colors duration-200"
+            onClick={prevSet}
+            className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-300 border border-gray-100"
           >
-            <FaChevronLeft className="w-6 h-6 text-blue-500" />
+            <FaChevronLeft className="w-6 h-6 text-primary-600" />
           </button>
           <button
-            onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 p-2 rounded-full bg-white shadow-lg hover:bg-blue-50 transition-colors duration-200"
+            onClick={nextSet}
+            className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-300 border border-gray-100"
           >
-            <FaChevronRight className="w-6 h-6 text-blue-500" />
+            <FaChevronRight className="w-6 h-6 text-primary-600" />
           </button>
 
-          {/* Testimonials carousel */}
-          <div className="relative h-[400px]">
+          {/* Testimonials Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <AnimatePresence mode="wait">
-              <motion.div
-                key={currentIndex}
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -100 }}
-                transition={{ duration: 0.5 }}
-                className="absolute inset-0"
-              >
-                <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <div className="flex flex-col items-center text-center">
-                    {/* Avatar */}
-                    <div className="relative mb-6">
-                      <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-blue-100">
+              {currentTestimonials.map((testimonial, index) => (
+                <motion.div
+                  key={`${currentSet}-${index}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="relative"
+                >
+                  <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                    <div className="pt-4 text-center">
+                      <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-primary-100">
                         <img
-                          src={testimonials[currentIndex].image}
-                          alt={testimonials[currentIndex].name}
+                          src={`/images/testimonials/${testimonial.name.toLowerCase().replace(/\s+/g, '-')}.jpg`}
+                          alt={testimonial.name}
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-500 text-white text-xs px-3 py-1 rounded-full">
-                        ✅ Témoignage vérifié
-                      </div>
-                    </div>
-
-                    {/* Quote */}
-                    <FaQuoteLeft className="text-4xl text-blue-200 mb-4" />
-                    <p className="text-lg text-gray-700 italic mb-6">
-                      "{testimonials[currentIndex].quote}"
-                    </p>
-
-                    {/* Author info */}
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900">
-                        {testimonials[currentIndex].name}
+                      <h3 className="text-xl font-bold text-gray-900 mb-1">
+                        {testimonial.name}
                       </h3>
-                      <p className="text-blue-500">{testimonials[currentIndex].role}</p>
+                      <div className="italic text-primary-600 mb-2">
+                        {testimonial.location}
+                      </div>
+                      <div className="mb-3">
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i} className="text-yellow-400">
+                            {i < testimonial.rating ? (
+                              <FaStar className="inline" />
+                            ) : (
+                              <FaStarHalfAlt className="inline" />
+                            )}
+                          </span>
+                        ))}
+                      </div>
+                      <p className="text-gray-600 text-base">
+                        {testimonial.message}
+                      </p>
                     </div>
                   </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              ))}
             </AnimatePresence>
           </div>
 
-          {/* Dots navigation */}
-          <div className="flex justify-center mt-8 space-x-2">
-            {testimonials.map((_, index) => (
+          {/* Progress Bar */}
+          <div className="mt-8 flex justify-center">
+            <div className="w-full max-w-md h-1 bg-gray-100 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-gradient-to-r from-primary-600 to-primary-500"
+                initial={{ width: "0%" }}
+                animate={{ width: `${((currentSet + 1) / totalSets) * 100}%` }}
+                transition={{ duration: 0.5 }}
+              />
+            </div>
+          </div>
+
+          {/* Set Indicators */}
+          <div className="flex justify-center mt-4 space-x-2">
+            {Array.from({ length: totalSets }).map((_, index) => (
               <button
                 key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`w-3 h-3 rounded-full transition-colors duration-200 ${
-                  index === currentIndex ? 'bg-blue-500' : 'bg-blue-200'
+                onClick={() => {
+                  setCurrentSet(index);
+                  setIsAutoPlaying(false);
+                }}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === currentSet
+                    ? 'bg-primary-600 w-4'
+                    : 'bg-gray-200'
                 }`}
               />
             ))}

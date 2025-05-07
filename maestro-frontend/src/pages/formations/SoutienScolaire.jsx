@@ -35,12 +35,14 @@ const SoutienScolaire = () => {
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img
-            src="/images/soutien-scolaire-hero.jpg"
-            alt="Soutien Scolaire"
+          <video
+            src="/videos/soutien-scolaire-hero.mp4"
+            autoPlay
+            muted
+            loop
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-900/90 to-primary-800/80 backdrop-blur-sm" />
+          
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

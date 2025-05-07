@@ -37,13 +37,18 @@ const Formations = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/images/formations-hero.jpg"
-            alt="Formations Le Maestro Academy"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-900/90 to-primary-800/80" />
+       {/* Video Background */}
+      <div className="absolute inset-0 w-full h-full">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/videos/hero-image.mp4" type="video/mp4" />
+        </video>
+          <div className="absolute inset-0 rounded-2xl" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,7 +104,7 @@ const Formations = () => {
                     alt={formation.title}
                     className="w-full h-full object-cover"
                   />
-                  <div className={`absolute inset-0 ${formation.bgColor} opacity-20`} />
+                
                 </div>
                 
                 <div className="p-6">
@@ -158,8 +163,8 @@ const Formations = () => {
               🎯 Votre avenir commence ici.
             </p>
             <Link
-              to="/inscription"
-              className="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-full text-sky-600 bg-white hover:bg-gray-50 transition-colors duration-300 shadow-lg hover:shadow-xl"
+              to="/register"
+              className="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-full text-white bg-gradient-to-r from-[#4a00e0] to-[#8e2de2] hover:from-[#4a00e0]/90 hover:to-[#8e2de2]/90 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               Inscrivez-vous maintenant
             </Link>

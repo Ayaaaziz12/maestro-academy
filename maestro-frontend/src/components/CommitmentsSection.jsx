@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
   BookOpen, 
@@ -9,6 +10,8 @@ import {
 } from 'lucide-react';
 
 const CommitmentsSection = () => {
+  const navigate = useNavigate();
+
   const commitments = [
     {
       icon: <Users className="w-6 h-6" />,
@@ -130,7 +133,7 @@ const CommitmentsSection = () => {
                   className="w-full h-full object-contain"
                 />
                 {/* Effet de dégradé décoratif */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-100/20 to-transparent pointer-events-none" />
+                
               </div>
             </motion.div>
           </div>
@@ -143,7 +146,9 @@ const CommitmentsSection = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/contact')}
               className="px-8 py-4 bg-gradient-to-r from-primary-600 to-secondary-600 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+            
             >
               Rejoignez-nous
             </motion.button>

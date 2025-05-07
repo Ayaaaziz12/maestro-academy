@@ -6,6 +6,20 @@ import { AnimatePresence } from "framer-motion";
 import AuthModals from './AuthModals';
 import { motion } from "framer-motion";
 
+// Composant personnalisé pour le défilement vers le haut
+const ScrollToTopLink = ({ to, children, className, onClick }) => {
+  const handleClick = (e) => {
+    if (onClick) onClick(e);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <Link to={to} className={className} onClick={handleClick}>
+      {children}
+    </Link>
+  );
+};
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -68,14 +82,14 @@ const Header = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <Link
+                    <ScrollToTopLink
                       to={link.to}
                       className={`text-gray-700 hover:text-primary-600 transition-colors duration-200 font-medium ${
                         location.pathname === link.to ? "text-primary-600" : ""
                       }`}
                     >
                       {link.label}
-                    </Link>
+                    </ScrollToTopLink>
                   </motion.div>
                 ))}
               </div>
@@ -143,7 +157,7 @@ const Header = () => {
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: -20, opacity: 0 }}
                   >
-                    <Link
+                    <ScrollToTopLink
                       to={link.to}
                       onClick={() => setIsOpen(false)}
                       className={`block text-gray-700 hover:text-primary-600 transition-colors duration-200 font-medium ${
@@ -151,7 +165,7 @@ const Header = () => {
                       }`}
                     >
                       {link.label}
-                    </Link>
+                    </ScrollToTopLink>
                   </motion.div>
                 ))}
                 <div className="pt-4 border-t border-gray-100">

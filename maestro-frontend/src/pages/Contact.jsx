@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Clock } from 'lucide-react';
 import React from 'react';
 
 const OpenStreetMap = ({ 
@@ -165,11 +165,15 @@ const Contact = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pt-24">
       <div className="relative h-[40vh] w-full overflow-hidden">
         <div className="absolute inset-0">
-          <img
-            src="/images/contact-hero.jpg"
-            alt="Contact Maestro Academy"
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
             className="w-full h-full object-cover"
-          />
+          >
+            <source src="/videos/contact-hero.mp4" type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-black/50" />
         </div>
         <div className="relative h-full flex items-center justify-center text-center px-4">
@@ -293,7 +297,7 @@ const Contact = () => {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">Téléphone</h3>
                     <p className="text-gray-600">
-                    06 06 99 29 29 / 06 08 06 29 29 / 05 30 03 35 60
+                    06 06 99 29 29 / 06 08 06 29 29 / 05 30 03 35 60
                     </p>
                   </div>
                 </div>
@@ -307,6 +311,19 @@ const Contact = () => {
                     <h3 className="text-lg font-semibold text-gray-900">Email</h3>
                     <p className="text-gray-600">
                     academylemaestro@gmail.com
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0">
+                    <div className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
+                      <Clock className="w-6 h-6 text-primary-600" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">Horaires d'ouverture</h3>
+                    <p className="text-gray-600">
+                      Lun–Ven : 11h45–21h30 | Sam : 11h45–17h30 | Dim : 11h–13h30
                     </p>
                   </div>
                 </div>
