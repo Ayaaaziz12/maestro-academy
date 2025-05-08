@@ -38,6 +38,7 @@ const OpenStreetMap = ({
         script.async = true;
         script.onload = initializeMap;
         document.body.appendChild(script);
+        
       } else {
         initializeMap();
       }
@@ -87,7 +88,8 @@ const OpenStreetMap = ({
       style={{
         ...mapContainerStyle,
         width: mapContainerStyle?.width || '100%',
-        height: mapContainerStyle?.height || '400px'
+        height: mapContainerStyle?.height || '400px',
+        zIndex:1,
       }}
     />
   );

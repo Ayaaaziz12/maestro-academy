@@ -1,8 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { ChevronDown, HelpCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const FAQSection = () => {
+  const navigate = useNavigate();
   const [openIndex, setOpenIndex] = useState(null);
 
   const faqs = [
@@ -149,6 +151,7 @@ const FAQSection = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/contact')}
               className="px-8 py-4 bg-gradient-to-r from-primary-600 to-secondary-600 text-white rounded-xl font-medium shadow-md hover:shadow-lg transition-all duration-300"
             >
               Contactez-nous

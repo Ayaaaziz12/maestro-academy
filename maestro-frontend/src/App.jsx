@@ -1,5 +1,5 @@
 // src/App.jsx
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -15,55 +15,74 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import MyCourses from './pages/MyCourses';
 import ProtectedRoute from './components/ProtectedRoute';
-import useScrollToTop from './hooks/useScrollToTop';
+import { AnimatePresence } from 'framer-motion';
+import PageTransition from './components/PageTransition';
 
-function AppContent() {
-  useScrollToTop();
+const AnimatedRoutes = () => {
+  const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
-      <main>
-        <Routes>
-          <Route path="/" element={<Accueil />} />
-          <Route path="/formations" element={<Formations />} />
-          <Route path="/soutien-scolaire" element={<SoutienScolaire />} />
-          <Route path="/preparation-concours" element={<PreparationConcours />} />
-          <Route path="/formateurs" element={<Formateurs />} />
-          <Route path="/a-propos" element={<APropos />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/connexion" element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          
-          {/* Routes protégées */}
-          <Route
-            path="/profil"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/mes-cours"
-            element={
-              <ProtectedRoute>
-                <MyCourses />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={
+          <PageTransition>
+            <Accueil />
+          </PageTransition>
+        } />
+        <Route path="/formations" element={
+          <PageTransition>
+            <Formations />
+          </PageTransition>
+        } />
+        <Route path="/soutien-scolaire" element={<SoutienScolaire />} />
+        <Route path="/preparation-concours" element={<PreparationConcours />} />
+        <Route path="/formateurs" element={<Formateurs />} />
+        <Route path="/a-propos" element={
+          <PageTransition>
+            <APropos />
+          </PageTransition>
+        } />
+        <Route path="/contact" element={
+          <PageTransition>
+            <Contact />
+          </PageTransition>
+        } />
+        <Route path="/connexion" element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        
+        {/* Routes protégées */}
+        <Route
+          path="/profil"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/mes-cours"
+          element={
+            <ProtectedRoute>
+              <MyCourses />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </AnimatePresence>
   );
-}
+};
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <AppContent />
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          <main className="flex-grow">
+            <AnimatedRoutes />
+          </main>
+          <Footer />
+        </div>
       </Router>
     </AuthProvider>
   );

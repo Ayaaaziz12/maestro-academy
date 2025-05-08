@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 const HeroSection = () => {
@@ -24,13 +24,13 @@ const HeroSection = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Contenu texte */}
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-center lg:text-left"
           >
-            <motion.h1 
+            <Motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -40,9 +40,9 @@ const HeroSection = () => {
               <span className="bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
                 Maestro Academy
               </span>
-            </motion.h1>
+            </Motion.h1>
             
-            <motion.p
+            <Motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -50,35 +50,35 @@ const HeroSection = () => {
             >
               Centre d'excellence pour la préparation aux concours et le soutien scolaire. 
               Notre équipe d'experts vous accompagne vers la réussite.
-            </motion.p>
+            </Motion.p>
             
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
             >
-              <motion.button
+              <Motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => navigate('/formations')}
                 className="px-8 py-4 bg-gradient-to-r from-primary-600 to-secondary-600 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 Voir les formations
-              </motion.button>
-              <motion.button
+              </Motion.button>
+              <Motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => navigate('/contact')}
                 className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/20"
               >
                 Nous contacter
-              </motion.button>
-            </motion.div>
-          </motion.div>
+              </Motion.button>
+            </Motion.div>
+          </Motion.div>
 
           {/* Éléments décoratifs */}
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -86,7 +86,7 @@ const HeroSection = () => {
           >
             <div className="absolute -top-4 -right-4 w-72 h-72 bg-primary-400/20 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
             <div className="absolute -bottom-8 left-20 w-72 h-72 bg-secondary-400/20 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-          </motion.div>
+          </Motion.div>
         </div>
       </div>
     </section>

@@ -8,8 +8,7 @@ const Footer = () => {
   const footerLinks = [
     { label: "Accueil", href: "/" },
     { label: "Formations", href: "/formations" },
-    { label: "Formateurs", href: "/formateurs" },
-    { label: "Témoignages", href: "/temoignages" },
+    { label: "A Propos", href: "/APropos" },
     { label: "Contact", href: "/contact" },
   ];
 
