@@ -12,7 +12,7 @@ Bienvenue sur le projet **Maestro Academy** — une plateforme web moderne dédi
 - 💬 Section **Témoignages** d’élèves satisfaits
 - 📞 Page **Contact** avec formulaire animé et design responsive
 - 🔐 Authentification (inscription / connexion) avec design moderne
-- 🌙 Dark Mode (à venir...)
+
 
 ---
 
@@ -40,7 +40,7 @@ git clone https://github.com/votre-utilisateur/maestro-academy.git
 cd maestro-academy/maestro-frontend
 
 # Installer les dépendances
-pnpm install
+npm install
 
 # Lancer le serveur de développement
-pnpm dev
+npm run dev
