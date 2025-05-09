@@ -1,6 +1,6 @@
 // src/components/Footer.jsx
 import { motion } from "framer-motion";
-import { Facebook, Instagram, Mail, Phone, MapPin, Clock } from "lucide-react";
+import { Facebook, Instagram, Mail, Phone, MapPin, Clock, MessageCircle } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -22,6 +22,11 @@ const Footer = () => {
       label: "Instagram",
       href: "https://www.instagram.com/lemaestroacademy",
       icon: <Instagram size={20} />,
+    },
+    {
+      label: "WhatsApp",
+      href: "https://wa.me/212608062929",
+      icon: <MessageCircle size={20} />,
     },
   ];
 

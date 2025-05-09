@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react"; // Icônes (npm i lucide-react)
+// eslint-disable-next-line camelcase
 import { AnimatePresence, motion } from "framer-motion";
 import AuthModals from './AuthModals';
 
@@ -20,7 +21,7 @@ const ScrollToTopLink = ({ to, children, className, onClick }) => {
 };
 
 const Header = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [authModal, setAuthModal] = useState(null); // 'login' ou 'register'
   const location = useLocation();
@@ -37,7 +38,7 @@ const Header = () => {
 
   // Fermer le menu mobile lors du changement de route
   useEffect(() => {
-    setIsOpen(false);
+    setIsMenuOpen(false);
   }, [location]);
 
   const navLinks = [
@@ -53,6 +54,10 @@ const Header = () => {
       top: 0,
       behavior: 'smooth'
     });
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
@@ -73,7 +78,7 @@ const Header = () => {
               className="flex-shrink-0 cursor-pointer"
             >
               <img
-                className="h-[100px] sm:h-[150px] lg:h-[200px] w-auto object-contain mt-4"
+                className="h-[150px] sm:h-[100px] lg:h-[200px] w-auto object-contain mt-4"
                 src="/images/logo-maestro.jpg"
                 alt="Maestro Academy"
               />
@@ -121,69 +126,63 @@ const Header = () => {
               </motion.button>
             </div>
 
-            {/* Hamburger pour mobile */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="md:hidden text-primary-600"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
-            </motion.button>
+            {/* Bouton Menu Mobile */}
+            <div className="md:hidden">
+              <button
+                onClick={toggleMenu}
+                className="text-gray-700 hover:text-primary-600 focus:outline-none"
+              >
+                {isMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Menu Mobile */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white border-t border-gray-100"
-            >
-              <div className="px-4 py-4 space-y-4">
-                {navLinks.map((link) => (
-                  <motion.div
-                    key={link.to}
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -20, opacity: 0 }}
-                  >
-                    <Link
-                      to={link.to}
-                      onClick={() => setIsOpen(false)}
-                      className={`block text-gray-700 hover:text-primary-600 transition-colors duration-200 font-medium ${
-                        location.pathname === link.to ? "text-primary-600" : ""
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  </motion.div>
-                ))}
-                {/* Boutons d'authentification (mobile) */}
-                <div className="pt-4 border-t border-gray-100 flex flex-col space-y-3">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => { setAuthModal('login'); setIsOpen(false); }}
-                    className="w-full px-5 py-2 rounded-full border-2 border-primary-600 text-primary-600 text-sm font-semibold hover:bg-primary-600 hover:text-white transition-all duration-300"
-                  >
-                    Connexion
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => { setAuthModal('register'); setIsOpen(false); }}
-                    className="w-full px-5 py-2 rounded-full bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    S'inscrire
-                  </motion.button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <motion.div
+          initial={false}
+          animate={{ height: isMenuOpen ? "auto" : 0 }}
+          transition={{ duration: 0.3 }}
+          className="md:hidden overflow-hidden bg-white"
+        >
+          <div className="px-4 py-4 space-y-4">
+            {navLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                onClick={() => setIsMenuOpen(false)}
+                className={`block text-gray-700 hover:text-primary-600 transition-colors duration-200 font-medium ${
+                  location.pathname === link.to ? "text-primary-600" : ""
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+            {/* Boutons d'authentification (mobile) */}
+            <div className="pt-4 border-t border-gray-100 flex flex-col space-y-3">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => { setAuthModal('login'); setIsMenuOpen(false); }}
+                className="w-full px-5 py-2 rounded-full border-2 border-primary-600 text-primary-600 text-sm font-semibold hover:bg-primary-600 hover:text-white transition-all duration-300"
+              >
+                Connexion
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => { setAuthModal('register'); setIsMenuOpen(false); }}
+                className="w-full px-5 py-2 rounded-full bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                S'inscrire
+              </motion.button>
+            </div>
+          </div>
+        </motion.div>
       </motion.header>
 
       {/* Modal d'authentification */}

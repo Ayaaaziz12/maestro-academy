@@ -12,7 +12,6 @@ const formations = [
     description: "Un accompagnement personnalisé pour renforcer les acquis et combler les lacunes.",
     image: "/images/soutien-scolaire.jpg",
     targets: [
-      "Élèves du primaire",
       "Collégiens",
       "Lycéens"
     ],

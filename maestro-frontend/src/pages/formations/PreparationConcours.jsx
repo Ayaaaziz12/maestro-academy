@@ -8,9 +8,9 @@ const ecoles = [
     schools: [
       "ENSA",
       "ENSAM",
-      "ENIM",
-      "ENSEM",
-      "ENSIAS"
+      "ENA",
+      "APESA-IAV",
+      "ENAM"
     ]
   },
   {
@@ -18,19 +18,17 @@ const ecoles = [
     schools: [
       "ENCG",
       "ISCAE",
-      "ENAM",
-      "ESCA",
-      "EMSI"
+      
     ]
   },
   {
     title: "Écoles de Médecine et Santé",
     schools: [
-      "Médecine",
-      "Dentaire",
+      "Médecine générale",
+      "Médecine dentaire",
       "Pharmacie",
-      "Kinésithérapie",
-      "Sciences Infirmières"
+      
+    
     ]
   }
 ];

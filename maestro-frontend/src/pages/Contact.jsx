@@ -128,9 +128,32 @@ const Contact = () => {
   const onUnmount = useCallback(function callback() {
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    try {
+      const response = await fetch('http://localhost:8000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert('Message envoyé avec succès !');
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        alert('Une erreur est survenue lors de l\'envoi du message.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Une erreur est survenue lors de l\'envoi du message.');
+    }
   };
 
   const handleChange = (e) => {

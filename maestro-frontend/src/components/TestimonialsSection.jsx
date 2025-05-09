@@ -26,7 +26,7 @@ const TestimonialsSection = () => {
       id: 3,
       name: "Reda Cherkaoui",
       location: "Rabat, Bab Challah",
-      rating: 5,
+      rating: 4.5,
       message: "Un accompagnement personnalisé qui fait toute la différence. Merci pour votre professionnalisme !Les conseils des formateurs m’ont beaucoup aidé dans mes préparations aux concours."
     },
     {
@@ -40,7 +40,7 @@ const TestimonialsSection = () => {
       id: 5,
       name: "Sarah Bennani",
       location: "Rabat, Agdal",
-      rating: 5,
+      rating: 4.5 ,
       message: "J’ai retrouvé le plaisir d’apprendre grâce à une méthode claire et motivante. Une ambiance sérieuse mais bienveillante, idéale pour apprendre."
     },
     {
