@@ -1,40 +1,126 @@
 // src/pages/Login.jsx
-import { useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { 
+  FaEye, 
+  FaEyeSlash, 
+  FaGoogle, 
+  FaFacebook, 
+  FaInstagram, 
+  FaWhatsapp,
+  FaEnvelope,
+  FaLock,
+  FaTimesCircle,
+  FaGraduationCap,
+  FaRocket,
+  FaGlobe,
+  FaGlobeAmericas,
+  FaChevronDown
+} from 'react-icons/fa';
 import { motion } from 'framer-motion';
+
+const translations = {
+  fr: {
+    title: "Se connecter",
+    subtitle: "Bienvenue ! Connectez-vous pour continuer",
+    email: "Adresse email",
+    password: "Mot de passe",
+    submit: "Se connecter",
+    loading: "Connexion en cours...",
+    orSignIn: "Ou se connecter avec",
+    noAccount: "Vous n'avez pas encore de compte ?",
+    register: "Créer un compte",
+    errors: {
+      email: "L'email est requis",
+      invalidEmail: "Format d'email invalide",
+      password: "Le mot de passe est requis",
+      submit: "Une erreur est survenue lors de la connexion"
+    }
+  },
+  en: {
+    title: "Sign In",
+    subtitle: "Welcome back! Sign in to continue",
+    email: "Email Address",
+    password: "Password",
+    submit: "Sign In",
+    loading: "Signing in...",
+    orSignIn: "Or sign in with",
+    noAccount: "Don't have an account?",
+    register: "Create Account",
+    errors: {
+      email: "Email is required",
+      invalidEmail: "Invalid email format",
+      password: "Password is required",
+      submit: "An error occurred during sign in"
+    }
+  },
+  ar: {
+    title: "تسجيل الدخول",
+    subtitle: "مرحباً بعودتك! سجل دخولك للمتابعة",
+    email: "البريد الإلكتروني",
+    password: "كلمة المرور",
+    submit: "تسجيل الدخول",
+    loading: "جاري تسجيل الدخول...",
+    orSignIn: "أو سجل دخولك باستخدام",
+    noAccount: "ليس لديك حساب؟",
+    register: "إنشاء حساب",
+    errors: {
+      email: "البريد الإلكتروني مطلوب",
+      invalidEmail: "صيغة البريد الإلكتروني غير صالحة",
+      password: "كلمة المرور مطلوبة",
+      submit: "حدث خطأ أثناء تسجيل الدخول"
+    }
+  }
+};
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    language: 'fr'
   });
-  const [error, setError] = useState('');
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   
   const navigate = useNavigate();
-  const location = useLocation();
   const { login } = useAuth();
 
-  // Récupérer l'URL de destination si elle existe
-  const from = location.state?.from?.pathname || '/';
+  const t = translations[formData.language];
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.email.trim()) {
+      newErrors.email = t.errors.email;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = t.errors.invalidEmail;
+    }
+    
+    if (!formData.password) {
+      newErrors.password = t.errors.password;
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    if (!validateForm()) return;
     setLoading(true);
-
     try {
       const result = await login(formData.email, formData.password);
-      
+      console.log('Login result:', result);
       if (result.success) {
-        // Rediriger vers la page d'origine ou la page d'accueil
-        navigate(from, { replace: true });
+        navigate('/');
       } else {
-        setError(result.error || 'Une erreur est survenue lors de la connexion');
+        setErrors({ submit: result.error || t.errors.submit });
       }
     } catch (err) {
-      setError('Une erreur est survenue lors de la connexion');
+      setErrors({ submit: t.errors.submit });
       console.error('Login error:', err);
     } finally {
       setLoading(false);
@@ -47,133 +133,257 @@ const Login = () => {
       ...prev,
       [name]: value
     }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Video Background */}
-      <div className="absolute inset-0 w-full h-full">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="/videos/auth-background.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-black/50" />
-      </div>
-
-      {/* Content */}
-      <div className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full max-w-md"
-        >
-          <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/20">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900">Connexion</h1>
-              <p className="mt-2 text-gray-600">
-                Bienvenue ! Connectez-vous à votre compte
-              </p>
-            </div>
-
-            {error && (
-              <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg">
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 bg-white/80 backdrop-blur-sm"
-                  placeholder="votre@email.com"
-                  disabled={loading}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                  Mot de passe
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 bg-white/80 backdrop-blur-sm"
-                  placeholder="Votre mot de passe"
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember"
-                    type="checkbox"
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                    disabled={loading}
-                  />
-                  <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">
-                    Se souvenir de moi
-                  </label>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-100 via-blue-100 to-white py-20">
+      <div className="flex w-full max-w-5xl h-[650px] rounded-2xl shadow-2xl overflow-hidden mx-auto">
+        {/* Colonne gauche visuelle */}
+        <div className="w-[40%] flex flex-col justify-between px-10 py-14 bg-gradient-to-br from-violet-600 to-blue-400 relative">
+          {/* Logo et titre */}
+          <div className="flex flex-col h-full justify-between items-center top-4 right-4">
+            <div>
+              <div className="flex top-4 right-4 items-center mb-8">
+                <div className="text-white text-l leading-tight italic">
+                  Le <span className="font-extrabold not-italic">Maestro</span><br />Academy
                 </div>
-
-                <Link
-                  to="/mot-de-passe-oublie"
-                  className="text-sm font-medium text-primary-600 hover:text-primary-500"
-                >
-                  Mot de passe oublié ?
-                </Link>
               </div>
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                disabled={loading}
-                className="w-full px-6 py-3 bg-gradient-to-r from-primary-600 to-secondary-600 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              <div className="space-y-6">
+                <h1 className="text-white text-l font-bold leading-tight italic">
+                  Apprenez avec les meilleurs Formateurs,
+                  <img src="/images/globe.png" alt="Globe" className="inline-block w-9 h-9 mx-1 align-middle" />
+                  partout dans le monde
+                </h1>
+                <div className="text-white/90 text-lg space-y-4">
+                  <p className="flex items-center gap-2">
+                    <FaGraduationCap className="text-violet-300" />
+                    <span>Formations certifiantes de qualité</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <FaRocket className="text-violet-300" />
+                    <span>Progression rapide et efficace</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <FaGlobe className="text-violet-300" />
+                    <span>Accès à une communauté mondiale</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="relative h-[300px] flex items-center justify-center">
+              <motion.img 
+                src="/images/3d-student.png" 
+                alt="Étudiant" 
+                className="z-10 relative"
+                initial={{ y: 0 }}
+                animate={{ y: [-10, 10, -10] }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+              {/* Éléments flottants */}
+              <motion.img 
+                src="/images/floating-books.png" 
+                alt="Livres" 
+                className="absolute -left-16 top-1/3 w-16 h-16"
+                animate={{
+                  y: [-15, 15, -15],
+                  rotate: [-5, 5, -5],
+                  x: [-5, 5, -5]
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+              <motion.img 
+                src="/images/rocket.png" 
+                alt="Fusée" 
+                className="absolute -right-16 bottom-1/3 w-20 h-20"
+                animate={{
+                  y: [15, -15, 15],
+                  rotate: [5, -5, 5],
+                  x: [5, -5, 5]
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+              <motion.img 
+                src="/images/paper-plane.png" 
+                alt="Avion en papier" 
+                className="absolute right-8 top-1/4 w-14 h-14"
+                animate={{
+                  rotate: [0, 360],
+                  scale: [1, 1.3, 1],
+                  y: [-15, 15, -15],
+                  x: [0, 10, 0]
+                }}
+                transition={{
+                  rotate: {
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "linear"
+                  },
+                  scale: {
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  },
+                  y: {
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  },
+                  x: {
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }
+                }}
+              />
+              <motion.div 
+                className="absolute left-8 top-1/4 w-10 h-10"
+                animate={{
+                  scale: [0.8, 1.4, 1],
+                  opacity: [0, 1, 0],
+                  rotate: [0, 180, 360]
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
               >
-                {loading ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
-                    Connexion en cours...
-                  </div>
-                ) : (
-                  'Se connecter'
-                )}
-              </motion.button>
-            </form>
-
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
-                Vous n'avez pas de compte ?{' '}
-                <Link
-                  to="/register"
-                  className="font-medium text-primary-600 hover:text-primary-500"
-                >
-                  S'inscrire
-                </Link>
-              </p>
+                <img src="/images/star.png" alt="Étoile" className="w-full h-full" />
+              </motion.div>
             </div>
           </div>
-        </motion.div>
+        </div>
+        {/* Colonne droite formulaire */}
+        <div className="w-[60%] flex items-center justify-center px-6 md:px-12 py-10">
+          <div className="w-full max-w-lg bg-white/95 backdrop-blur-sm rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-8 md:p-12 flex flex-col relative">
+            {/* Menu de langue */}
+            <div className="absolute top-4 right-4">
+              <button
+                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-violet-600 transition-colors"
+              >
+                <FaGlobeAmericas className="text-base" />
+                <span className="capitalize">{formData.language === 'fr' ? 'Français' : formData.language === 'en' ? 'English (USA)' : 'العربية'}</span>
+                <FaChevronDown className={`text-xs transition-transform duration-200 ${showLanguageMenu ? 'rotate-180' : ''}`} />
+              </button>
+              {showLanguageMenu && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10">
+                  <button
+                    onClick={() => {
+                      setFormData(prev => ({ ...prev, language: 'fr' }));
+                      setShowLanguageMenu(false);
+                    }}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors ${formData.language === 'fr' ? 'text-violet-600' : 'text-gray-600'}`}
+                  >
+                    Français
+                  </button>
+                  <button
+                    onClick={() => {
+                      setFormData(prev => ({ ...prev, language: 'en' }));
+                      setShowLanguageMenu(false);
+                    }}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors ${formData.language === 'en' ? 'text-violet-600' : 'text-gray-600'}`}
+                  >
+                    English (USA)
+                  </button>
+                  <button
+                    onClick={() => {
+                      setFormData(prev => ({ ...prev, language: 'ar' }));
+                      setShowLanguageMenu(false);
+                    }}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors ${formData.language === 'ar' ? 'text-violet-600' : 'text-gray-600'}`}
+                  >
+                    العربية
+                  </button>
+                </div>
+              )}
+            </div>
+            <form onSubmit={handleSubmit} className="w-full">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-blue-500 bg-clip-text text-transparent capitalize">{t.title}</h2>
+                <p className="text-gray-500 text-sm mt-2 normal-case">{t.subtitle}</p>
+              </div>
+              {errors.submit && (
+                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-xl border border-red-100 text-xs flex items-center">
+                  <FaTimesCircle className="mr-2" />
+                  <span className="normal-case">{errors.submit}</span>
+                </div>
+              )}
+              <div className="space-y-3">
+                <div className="relative group">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-violet-500 transition-colors"><FaEnvelope /></span>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    placeholder={t.email}
+                    className={`w-full pl-10 pr-3 py-2 border-2 rounded-xl focus:border-violet-500 bg-gray-50/50 text-sm placeholder-gray-400 transition-all duration-200 normal-case ${errors.email ? 'border-red-500' : 'border-gray-200 hover:border-violet-200'}`}
+                    disabled={loading}
+                  />
+                  {errors.email && <p className="mt-1 text-xs text-red-500 normal-case">{errors.email}</p>}
+                </div>
+                <div className="relative group">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-violet-500 transition-colors"><FaLock /></span>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    placeholder={t.password}
+                    className={`w-full pl-10 pr-9 py-2 border-2 rounded-xl focus:border-violet-500 bg-gray-50/50 text-sm placeholder-gray-400 transition-all duration-200 normal-case ${errors.password ? 'border-red-500' : 'border-gray-200 hover:border-violet-200'}`}
+                    disabled={loading}
+                  />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-violet-600 transition-colors" tabIndex={-1}>
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                  {errors.password && <p className="mt-1 text-xs text-red-500 normal-case">{errors.password}</p>}
+                </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full mt-4 py-2.5 border-2 border-[#0090e7] text-[#0090e7] font-semibold rounded-full bg-white hover:bg-[#f0f8ff] transition-all duration-200 shadow-none hover:shadow-md capitalize disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? t.loading : t.submit}
+                </button>
+              </div>
+              {/* Séparateur */}
+              <div className="flex items-center my-4">
+                <div className="flex-1 h-px bg-gray-200" />
+                <span className="mx-3 text-gray-400 text-xs normal-case">{t.orSignIn}</span>
+                <div className="flex-1 h-px bg-gray-200" />
+              </div>
+              {/* Réseaux sociaux */}
+              <div className="flex justify-center gap-3 mb-3">
+                <button type="button" className="rounded-xl bg-white border border-gray-200 shadow-sm p-2.5 hover:bg-gray-50 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"><FaGoogle className="text-base text-gray-500" /></button>
+                <button type="button" className="rounded-xl bg-white border border-gray-200 shadow-sm p-2.5 hover:bg-gray-50 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"><FaFacebook className="text-base text-blue-600" /></button>
+                <button type="button" className="rounded-xl bg-white border border-gray-200 shadow-sm p-2.5 hover:bg-gray-50 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"><FaInstagram className="text-base text-pink-500" /></button>
+                <button type="button" className="rounded-xl bg-white border border-gray-200 shadow-sm p-2.5 hover:bg-gray-50 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"><FaWhatsapp className="text-base text-green-500" /></button>
+              </div>
+              <div className="text-center text-xs text-gray-500 normal-case">
+                {t.noAccount}{' '}
+                <Link to="/register" className="text-violet-600 hover:text-violet-800 font-medium transition-colors capitalize">{t.register}</Link>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -48,7 +48,7 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto lg:mx-0"
             >
-              Centre d'excellence pour la préparation aux concours et le soutien scolaire. 
+              Centre d'excellence pour le soutien scolaire et la préparation aux concours. 
               Notre équipe d'experts vous accompagne vers la réussite.
             </Motion.p>
             

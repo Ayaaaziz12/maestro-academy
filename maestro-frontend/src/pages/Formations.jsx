@@ -13,7 +13,8 @@ const formations = [
     image: "/images/soutien-scolaire.jpg",
     targets: [
       "Collégiens",
-      "Lycéens"
+      "Lycéens",
+      "Étudiants"
     ],
     link: "/soutien-scolaire",
     bgColor: "bg-primary-600"
@@ -21,7 +22,7 @@ const formations = [
   {
     icon: <GraduationCap className="w-8 h-8" />,
     title: "Préparation aux Concours",
-    description: "Une préparation intensive et méthodique pour réussir vos concours.",
+    description: "Un accompagnement intensif et structuré pour atteindre l'excellence lors de vos concours.",
     image: "/images/preparation-concours.jpg",
     targets: [
       "Étudiants en médecine",

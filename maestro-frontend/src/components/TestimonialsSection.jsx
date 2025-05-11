@@ -12,7 +12,7 @@ const TestimonialsSection = () => {
       id: 1,
       name: "Yasmine Benali",
       location: "Rabat, Avenue de France",
-      rating: 5,
+      rating: 4.5 ,
       message: "Une expérience exceptionnelle ! Les cours sont très bien structurés et les professeurs sont à l'écoute. J'ai vraiment progressé en peu de temps.L’accompagnement est constant, on se sent soutenu à chaque étape."
     },
     {
@@ -26,7 +26,7 @@ const TestimonialsSection = () => {
       id: 3,
       name: "Reda Cherkaoui",
       location: "Rabat, Bab Challah",
-      rating: 4.5,
+      rating: 4.5, 
       message: "Un accompagnement personnalisé qui fait toute la différence. Merci pour votre professionnalisme !Les conseils des formateurs m’ont beaucoup aidé dans mes préparations aux concours."
     },
     {

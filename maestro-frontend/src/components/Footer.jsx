@@ -45,7 +45,7 @@ const Footer = () => {
     },
     {
       icon: <Clock size={20} />,
-      text: "Lun–Ven : 11h45–21h30 | Sam : 11h45–17h30 | Dim : 11h–13h30",
+      text: "Lun–Ven : 10h45–19h30 | Sam : 10h45–19h30 | Dim : 11h00–14h00",
     },
   ];
 

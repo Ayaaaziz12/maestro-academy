@@ -83,7 +83,7 @@ const TeachersSection = () => {
                   <Target className="w-6 h-6 text-primary-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-primary-600">100%</p>
+                  <p className="text-2xl font-bold text-primary-600">87%</p>
                   <p className="text-sm text-gray-600">Taux de réussite</p>
                 </div>
               </div>

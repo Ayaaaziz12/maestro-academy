@@ -113,17 +113,17 @@ const Header = () => {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setAuthModal('login')}
                 className="px-5 py-2 rounded-full border-2 border-primary-600 text-primary-600 text-sm font-semibold hover:bg-primary-600 hover:text-white transition-all duration-300"
-              >
+                >
                 Connexion
               </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setAuthModal('register')}
-                className="px-5 py-2 rounded-full bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                S'inscrire
-              </motion.button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Link
+                  to="/register"
+                  className="px-5 py-2 rounded-full bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  S'inscrire
+                </Link>
+              </motion.div>
             </div>
 
             {/* Bouton Menu Mobile */}
@@ -161,6 +161,7 @@ const Header = () => {
               >
                 {link.label}
               </Link>
+              
             ))}
             {/* Boutons d'authentification (mobile) */}
             <div className="pt-4 border-t border-gray-100 flex flex-col space-y-3">
@@ -172,14 +173,14 @@ const Header = () => {
               >
                 Connexion
               </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => { setAuthModal('register'); setIsMenuOpen(false); }}
-                className="w-full px-5 py-2 rounded-full bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                S'inscrire
-              </motion.button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Link
+                  to="/register"
+                  className="w-full px-5 py-2 rounded-full bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  S'inscrire
+                </Link>
+              </motion.div>
             </div>
           </div>
         </motion.div>

@@ -14,7 +14,7 @@ const FAQSection = () => {
     },
     {
       question: "Quels sont les horaires des cours ?",
-      answer: "Les cours sont dispensés du lundi au vendredi de 11h45 à 21h30, le samedi de 11h45 à 17h30, et le dimanche de 11h à 13h30. Les horaires peuvent varier selon les niveaux et les formations."
+      answer: "Les cours sont dispensés du lundi au vendredi de 10h45 à 19h30, le samedi de 10h45 à 19h30, et le dimanche de 11h00 à 14h00. Les horaires peuvent varier selon les niveaux et les formations."
     },
     {
       question: "Comment s'inscrire aux formations ?",
