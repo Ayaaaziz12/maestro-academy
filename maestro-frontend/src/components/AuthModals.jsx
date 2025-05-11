@@ -1,22 +1,136 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
-import { X, Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
+// src/pages/Login.jsx
+import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { 
+  FaEye, 
+  FaEyeSlash, 
+  FaGoogle, 
+  FaFacebook, 
+  FaInstagram, 
+  FaWhatsapp,
+  FaEnvelope,
+  FaLock,
+  FaTimesCircle,
+  FaGraduationCap,
+  FaRocket,
+  FaGlobe,
+  FaGlobeAmericas,
+  FaChevronDown
+} from 'react-icons/fa';
+import { motion } from 'framer-motion';
 
-const AuthModals = ({ isOpen, onClose, type }) => {
+const translations = {
+  fr: {
+    title: "Se connecter",
+    subtitle: "Bienvenue ! Connectez-vous pour continuer",
+    email: "Adresse email",
+    password: "Mot de passe",
+    submit: "Se connecter",
+    loading: "Connexion en cours...",
+    orSignIn: "Ou se connecter avec",
+    noAccount: "Vous n'avez pas encore de compte ?",
+    register: "Créer un compte",
+    errors: {
+      email: "L'email est requis",
+      invalidEmail: "Format d'email invalide",
+      password: "Le mot de passe est requis",
+      submit: "Une erreur est survenue lors de la connexion"
+    }
+  },
+  en: {
+    title: "Sign In",
+    subtitle: "Welcome back! Sign in to continue",
+    email: "Email Address",
+    password: "Password",
+    submit: "Sign In",
+    loading: "Signing in...",
+    orSignIn: "Or sign in with",
+    noAccount: "Don't have an account?",
+    register: "Create Account",
+    errors: {
+      email: "Email is required",
+      invalidEmail: "Invalid email format",
+      password: "Password is required",
+      submit: "An error occurred during sign in"
+    }
+  },
+  ar: {
+    title: "تسجيل الدخول",
+    subtitle: "مرحباً بعودتك! سجل دخولك للمتابعة",
+    email: "البريد الإلكتروني",
+    password: "كلمة المرور",
+    submit: "تسجيل الدخول",
+    loading: "جاري تسجيل الدخول...",
+    orSignIn: "أو سجل دخولك باستخدام",
+    noAccount: "ليس لديك حساب؟",
+    register: "إنشاء حساب",
+    errors: {
+      email: "البريد الإلكتروني مطلوب",
+      invalidEmail: "صيغة البريد الإلكتروني غير صالحة",
+      password: "كلمة المرور مطلوبة",
+      submit: "حدث خطأ أثناء تسجيل الدخول"
+    }
+  }
+};
+
+const AuthModals = () => {
+  const location = useLocation();
+  if (location.pathname !== '/connexion') {
+    return null;
+  }
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    language: 'fr'
   });
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [passwordStrength, setPasswordStrength] = useState(0);
+  
+  
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleSubmit = (e) => {
+  const t = translations[formData.language];
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.email.trim()) {
+      newErrors.email = t.errors.email;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = t.errors.invalidEmail;
+    }
+    
+    if (!formData.password) {
+      newErrors.password = t.errors.password;
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    onClose(null);
+    if (!validateForm()) return;
+    setLoading(true);
+    try {
+      const result = await login(formData.email, formData.password);
+      console.log('Login result:', result);
+      if (result.success) {
+        navigate('/');
+      } else {
+        setErrors({ submit: result.error || t.errors.submit });
+      }
+    } catch (err) {
+      setErrors({ submit: t.errors.submit });
+      console.error('Login error:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -25,260 +139,261 @@ const AuthModals = ({ isOpen, onClose, type }) => {
       ...prev,
       [name]: value
     }));
-
-    if (name === 'password') {
-      let strength = 0;
-      if (value.length >= 8) strength += 1;
-      if (/[A-Z]/.test(value)) strength += 1;
-      if (/[0-9]/.test(value)) strength += 1;
-      if (/[^A-Za-z0-9]/.test(value)) strength += 1;
-      setPasswordStrength(strength);
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
-  const handleClose = () => {
-    onClose(null);
-  };
-
-  const handleSwitchForm = (newType) => {
-    onClose(newType);
-  };
-
-  const pageVariants = {
-    hidden: { 
-      opacity: 0,
-      scale: 0.95
-    },
-    visible: { 
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: [0.4, 0, 0.2, 1],
-        staggerChildren: 0.1
-      }
-    },
-    exit: { 
-      opacity: 0,
-      scale: 0.95,
-      transition: {
-        duration: 0.3,
-        ease: [0.4, 0, 1, 1]
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.4,
-        ease: [0.4, 0, 0.2, 1]
-      }
-    }
-  };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          variants={pageVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          className="fixed inset-0 min-h-screen w-full bg-gradient-to-br from-blue-50 via-white to-purple-50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-        >
-          {/* Fond avec effet de flou */}
-          <div className="absolute inset-0 bg-black/20 backdrop-blur-md" onClick={handleClose} />
-
-          {/* Container principal */}
-          <motion.div 
-            variants={itemVariants}
-            className="relative w-[400px] bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-white/20 p-8"
-          >
-            {/* Header */}
-            <motion.div 
-              variants={itemVariants}
-              className="flex justify-between items-center mb-6"
-            >
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {type === 'login' ? 'Connexion' : 'Inscription'}
-              </h2>
-              <motion.button
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={handleClose}
-                className="text-gray-500 hover:text-gray-700 transition-colors p-2 rounded-full hover:bg-gray-100"
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-100 via-blue-100 to-white py-20">
+      <div className="flex w-full max-w-5xl h-[650px] rounded-2xl shadow-2xl overflow-hidden mx-auto">
+        {/* Colonne gauche visuelle */}
+        <div className="w-[40%] flex flex-col justify-between px-10 py-14 bg-gradient-to-br from-violet-600 to-blue-400 relative">
+          {/* Logo et titre */}
+          <div className="flex flex-col h-full justify-between items-center top-4 right-4">
+            <div>
+              <div className="flex top-4 right-4 items-center mb-8">
+                <div className="text-white text-l leading-tight italic">
+                  Le <span className="font-extrabold not-italic">Maestro</span><br />Academy
+                </div>
+              </div>
+              <div className="space-y-6">
+                <h1 className="text-white text-l font-bold leading-tight italic">
+                  Apprenez avec les meilleurs Formateurs,
+                  <img src="/images/globe.png" alt="Globe" className="inline-block w-9 h-9 mx-1 align-middle" />
+                  partout dans le monde
+                </h1>
+                <div className="text-white/90 text-lg space-y-4">
+                  <p className="flex items-center gap-2">
+                    <FaGraduationCap className="text-violet-300" />
+                    <span>Formations certifiantes de qualité</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <FaRocket className="text-violet-300" />
+                    <span>Progression rapide et efficace</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <FaGlobe className="text-violet-300" />
+                    <span>Accès à une communauté mondiale</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="relative h-[300px] flex items-center justify-center">
+              <motion.img 
+                src="/images/3d-student.png" 
+                alt="Étudiant" 
+                className="z-10 relative"
+                initial={{ y: 0 }}
+                animate={{ y: [-10, 10, -10] }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+              {/* Éléments flottants */}
+              <motion.img 
+                src="/images/floating-books.png" 
+                alt="Livres" 
+                className="absolute -left-16 top-1/3 w-16 h-16"
+                animate={{
+                  y: [-15, 15, -15],
+                  rotate: [-5, 5, -5],
+                  x: [-5, 5, -5]
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+              <motion.img 
+                src="/images/rocket.png" 
+                alt="Fusée" 
+                className="absolute -right-16 bottom-1/3 w-20 h-20"
+                animate={{
+                  y: [15, -15, 15],
+                  rotate: [5, -5, 5],
+                  x: [5, -5, 5]
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+              <motion.img 
+                src="/images/paper-plane.png" 
+                alt="Avion en papier" 
+                className="absolute right-8 top-1/4 w-14 h-14"
+                animate={{
+                  rotate: [0, 360],
+                  scale: [1, 1.3, 1],
+                  y: [-15, 15, -15],
+                  x: [0, 10, 0]
+                }}
+                transition={{
+                  rotate: {
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "linear"
+                  },
+                  scale: {
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  },
+                  y: {
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  },
+                  x: {
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }
+                }}
+              />
+              <motion.div 
+                className="absolute left-8 top-1/4 w-10 h-10"
+                animate={{
+                  scale: [0.8, 1.4, 1],
+                  opacity: [0, 1, 0],
+                  rotate: [0, 180, 360]
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
               >
-                <X size={24} />
-              </motion.button>
-            </motion.div>
-
-            {/* Form */}
-            <motion.form 
-              variants={itemVariants}
-              onSubmit={handleSubmit} 
-              className="space-y-6"
-            >
-              {type === 'register' && (
-                <motion.div variants={itemVariants}>
-                  <label className="block text-base font-medium text-gray-700 mb-2">
-                    Nom complet
-                  </label>
-                  <div className="relative group">
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 group-hover:border-blue-400 text-base"
-                      placeholder="John Doe"
-                      required
-                    />
-                    <User className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-blue-500 transition-colors" size={20} />
-                  </div>
-                </motion.div>
+                <img src="/images/star.png" alt="Étoile" className="w-full h-full" />
+              </motion.div>
+            </div>
+          </div>
+        </div>
+        {/* Colonne droite formulaire */}
+        <div className="w-[60%] flex items-center justify-center px-6 md:px-12 py-10">
+          <div className="w-full max-w-lg bg-white/95 backdrop-blur-sm rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-8 md:p-12 flex flex-col relative">
+            {/* Menu de langue */}
+            <div className="absolute top-4 right-4">
+              <button
+                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-violet-600 transition-colors"
+              >
+                <FaGlobeAmericas className="text-base" />
+                <span className="capitalize">{formData.language === 'fr' ? 'Français' : formData.language === 'en' ? 'English (USA)' : 'العربية'}</span>
+                <FaChevronDown className={`text-xs transition-transform duration-200 ${showLanguageMenu ? 'rotate-180' : ''}`} />
+              </button>
+              {showLanguageMenu && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10">
+                  <button
+                    onClick={() => {
+                      setFormData(prev => ({ ...prev, language: 'fr' }));
+                      setShowLanguageMenu(false);
+                    }}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors ${formData.language === 'fr' ? 'text-violet-600' : 'text-gray-600'}`}
+                  >
+                    Français
+                  </button>
+                  <button
+                    onClick={() => {
+                      setFormData(prev => ({ ...prev, language: 'en' }));
+                      setShowLanguageMenu(false);
+                    }}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors ${formData.language === 'en' ? 'text-violet-600' : 'text-gray-600'}`}
+                  >
+                    English (USA)
+                  </button>
+                  <button
+                    onClick={() => {
+                      setFormData(prev => ({ ...prev, language: 'ar' }));
+                      setShowLanguageMenu(false);
+                    }}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors ${formData.language === 'ar' ? 'text-violet-600' : 'text-gray-600'}`}
+                  >
+                    العربية
+                  </button>
+                </div>
               )}
-
-              <motion.div variants={itemVariants}>
-                <label className="block text-base font-medium text-gray-700 mb-2">
-                  Email
-                </label>
+            </div>
+            <form onSubmit={handleSubmit} className="w-full">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-blue-500 bg-clip-text text-transparent capitalize">{t.title}</h2>
+                <p className="text-gray-500 text-sm mt-2 normal-case">{t.subtitle}</p>
+              </div>
+              {errors.submit && (
+                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-xl border border-red-100 text-xs flex items-center">
+                  <FaTimesCircle className="mr-2" />
+                  <span className="normal-case">{errors.submit}</span>
+                </div>
+              )}
+              <div className="space-y-3">
                 <div className="relative group">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-violet-500 transition-colors"><FaEnvelope /></span>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 group-hover:border-blue-400 text-base"
-                    placeholder="votre@email.com"
                     required
+                    placeholder={t.email}
+                    className={`w-full pl-10 pr-3 py-2 border-2 rounded-xl focus:border-violet-500 bg-gray-50/50 text-sm placeholder-gray-400 transition-all duration-200 normal-case ${errors.email ? 'border-red-500' : 'border-gray-200 hover:border-violet-200'}`}
+                    disabled={loading}
                   />
-                  <Mail className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-blue-500 transition-colors" size={20} />
+                  {errors.email && <p className="mt-1 text-xs text-red-500 normal-case">{errors.email}</p>}
                 </div>
-              </motion.div>
-
-              <motion.div variants={itemVariants}>
-                <label className="block text-base font-medium text-gray-700 mb-2">
-                  Mot de passe
-                </label>
                 <div className="relative group">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-violet-500 transition-colors"><FaLock /></span>
                   <input
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 group-hover:border-blue-400 text-base"
-                    placeholder="••••••••"
                     required
+                    placeholder={t.password}
+                    className={`w-full pl-10 pr-9 py-2 border-2 rounded-xl focus:border-violet-500 bg-gray-50/50 text-sm placeholder-gray-400 transition-all duration-200 normal-case ${errors.password ? 'border-red-500' : 'border-gray-200 hover:border-violet-200'}`}
+                    disabled={loading}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-blue-500 transition-colors"
-                  >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-violet-600 transition-colors" tabIndex={-1}>
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
+                  {errors.password && <p className="mt-1 text-xs text-red-500 normal-case">{errors.password}</p>}
                 </div>
-                {type === 'register' && (
-                  <motion.div 
-                    variants={itemVariants}
-                    className="mt-2"
-                  >
-                    <div className="flex space-x-2">
-                      {[...Array(4)].map((_, index) => (
-                        <div
-                          key={index}
-                          className={`h-1.5 flex-1 rounded-full transition-colors duration-200 ${
-                            index < passwordStrength ? 'bg-gradient-to-r from-blue-500 to-purple-500' : 'bg-gray-200'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <p className="mt-1 text-xs text-gray-500">
-                      Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial
-                    </p>
-                  </motion.div>
-                )}
-              </motion.div>
-
-              {type === 'register' && (
-                <motion.div variants={itemVariants}>
-                  <label className="block text-base font-medium text-gray-700 mb-2">
-                    Confirmer le mot de passe
-                  </label>
-                  <div className="relative group">
-                    <input
-                      type={showConfirmPassword ? "text" : "password"}
-                      name="confirmPassword"
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 group-hover:border-blue-400 text-base"
-                      placeholder="••••••••"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-blue-500 transition-colors"
-                    >
-                      {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-
-              {type === 'register' && (
-                <motion.div 
-                  variants={itemVariants}
-                  className="flex items-center space-x-2"
-                >
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    required
-                  />
-                  <label className="text-sm text-gray-700">
-                    J'accepte les conditions d'utilisation
-                  </label>
-                </motion.div>
-              )}
-
-              <motion.button
-                variants={itemVariants}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium text-base shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group mt-6"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <span className="relative z-10">
-                  {type === 'login' ? 'Se connecter' : 'Créer mon compte'}
-                </span>
-              </motion.button>
-            </motion.form>
-
-            <motion.div 
-              variants={itemVariants}
-              className="mt-6 text-center"
-            >
-              <p className="text-sm text-gray-600">
-                {type === 'login' ? "Vous n'avez pas de compte ?" : "Vous avez déjà un compte ?"}{' '}
                 <button
-                  onClick={() => handleSwitchForm(type === 'login' ? 'register' : 'login')}
-                  className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                  type="submit"
+                  disabled={loading}
+                  className="w-full mt-4 py-2.5 border-2 border-[#0090e7] text-[#0090e7] font-semibold rounded-full bg-white hover:bg-[#f0f8ff] transition-all duration-200 shadow-none hover:shadow-md capitalize disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {type === 'login' ? "S'inscrire" : 'Se connecter'}
+                  {loading ? t.loading : t.submit}
                 </button>
-              </p>
-            </motion.div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+              </div>
+              {/* Séparateur */}
+              <div className="flex items-center my-4">
+                <div className="flex-1 h-px bg-gray-200" />
+                <span className="mx-3 text-gray-400 text-xs normal-case">{t.orSignIn}</span>
+                <div className="flex-1 h-px bg-gray-200" />
+              </div>
+              {/* Réseaux sociaux */}
+              <div className="flex justify-center gap-3 mb-3">
+                <button type="button" className="rounded-xl bg-white border border-gray-200 shadow-sm p-2.5 hover:bg-gray-50 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"><FaGoogle className="text-base text-blue-500" /></button>
+                <button type="button" className="rounded-xl bg-white border border-gray-200 shadow-sm p-2.5 hover:bg-gray-50 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"><FaFacebook className="text-base text-blue-600" /></button>
+                <button type="button" className="rounded-xl bg-white border border-gray-200 shadow-sm p-2.5 hover:bg-gray-50 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"><FaInstagram className="text-base text-pink-500" /></button>
+                <button type="button" className="rounded-xl bg-white border border-gray-200 shadow-sm p-2.5 hover:bg-gray-50 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"><FaWhatsapp className="text-base text-green-500" /></button>
+              </div>
+              <div className="text-center text-xs text-gray-500 normal-case">
+                {t.noAccount}{' '}
+                <Link to="/register" className="text-violet-600 hover:text-violet-800 font-medium transition-colors capitalize">{t.register}</Link>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default AuthModals; 
+export default AuthModals;

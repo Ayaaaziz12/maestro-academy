@@ -288,7 +288,7 @@ const Register = () => {
                 <h1 className="text-white text-l font-bold leading-tight italic">
                   Apprenez avec les meilleurs Formateurs,
                   <img src="/images/globe.png" alt="Globe" className="inline-block w-9 h-9 mx-1 align-middle" />
-                  partout dans le monde
+                  partout dans le monde .
                 </h1>
                 <div className="text-white/90 text-lg space-y-4">
                   <p className="flex items-center gap-2">
@@ -562,7 +562,7 @@ const Register = () => {
               </div>
               {/* Réseaux sociaux */}
               <div className="flex justify-center gap-3 mb-3">
-                <button type="button" className="rounded-xl bg-white border border-gray-200 shadow-sm p-2.5 hover:bg-gray-50 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"><FaGoogle className="text-base text-gray-500" /></button>
+                <button type="button" className="rounded-xl bg-white border border-gray-200 shadow-sm p-2.5 hover:bg-gray-50 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"><FaGoogle className="text-base text-blue-500" /></button>
                 <button type="button" className="rounded-xl bg-white border border-gray-200 shadow-sm p-2.5 hover:bg-gray-50 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"><FaFacebook className="text-base text-blue-600" /></button>
                 <button type="button" className="rounded-xl bg-white border border-gray-200 shadow-sm p-2.5 hover:bg-gray-50 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"><FaInstagram className="text-base text-pink-500" /></button>
                 <button type="button" className="rounded-xl bg-white border border-gray-200 shadow-sm p-2.5 hover:bg-gray-50 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"><FaWhatsapp className="text-base text-green-500" /></button>

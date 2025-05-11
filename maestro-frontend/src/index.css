@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.shadow-2xl {
+ position: relative;
+ top: 28px;
+}

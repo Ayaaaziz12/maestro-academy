@@ -17,6 +17,8 @@ import MyCourses from './pages/MyCourses';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AnimatePresence } from 'framer-motion';
 import PageTransition from './components/PageTransition';
+import AuthModals from './components/AuthModals';
+
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -47,7 +49,7 @@ const AnimatedRoutes = () => {
             <Contact />
           </PageTransition>
         } />
-        <Route path="/connexion" element={<Login />} />
+        <Route path="/connexion" element={<AuthModals />} />
         <Route path='/register' element={<Register />} />
         
         {/* Routes protégées */}

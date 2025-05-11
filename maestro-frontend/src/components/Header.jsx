@@ -4,7 +4,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react"; // Icônes (npm i lucide-react)
 // eslint-disable-next-line camelcase
 import { AnimatePresence, motion } from "framer-motion";
-import AuthModals from './AuthModals';
+import AuthModals from "./AuthModals"; // Composant de modal d'authentification
+import { useAuth } from "../contexts/AuthContext"; // Contexte d'authentification 
+
+
 
 // Composant personnalisé pour le défilement vers le haut
 const ScrollToTopLink = ({ to, children, className, onClick }) => {
@@ -108,14 +111,14 @@ const Header = () => {
 
             {/* Boutons d'authentification (desktop) */}
             <div className="hidden md:flex items-center space-x-3">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setAuthModal('login')}
-                className="px-5 py-2 rounded-full border-2 border-primary-600 text-primary-600 text-sm font-semibold hover:bg-primary-600 hover:text-white transition-all duration-300"
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Link
+                  to="/connexion"
+                  className="px-5 py-2 rounded-full bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                Connexion
-              </motion.button>
+                  Connexion
+                </Link>
+              </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Link
                   to="/register"
@@ -165,14 +168,14 @@ const Header = () => {
             ))}
             {/* Boutons d'authentification (mobile) */}
             <div className="pt-4 border-t border-gray-100 flex flex-col space-y-3">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => { setAuthModal('login'); setIsMenuOpen(false); }}
-                className="w-full px-5 py-2 rounded-full border-2 border-primary-600 text-primary-600 text-sm font-semibold hover:bg-primary-600 hover:text-white transition-all duration-300"
-              >
-                Connexion
-              </motion.button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Link
+                  to="/connexion"
+                  className="w-full px-5 py-2 rounded-full bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  Connexion
+                </Link>
+              </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Link
                   to="/register"
