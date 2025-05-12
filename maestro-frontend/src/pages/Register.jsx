@@ -272,10 +272,10 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-100 via-blue-100 to-white py-20">
-      <div className="flex w-full max-w-5xl h-[650px] rounded-2xl shadow-2xl overflow-hidden mx-auto">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-100 via-blue-100 to-white py-10 px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col md:flex-row flex-wrap w-full max-w-5xl h-auto rounded-2xl shadow-2xl overflow-hidden mx-auto">
         {/* Colonne gauche visuelle */}
-        <div className="w-[40%] flex flex-col justify-between px-10 py-14 bg-gradient-to-br from-violet-600 to-blue-400 relative ">
+        <div className="w-full md:w-[40%] flex flex-col justify-between px-6 py-10 bg-gradient-to-br from-violet-600 to-blue-400 relative">
           {/* Logo et titre */}
           <div className="flex flex-col h-full justify-between items-center top-4 right-4">
             <div>
@@ -285,7 +285,7 @@ const Register = () => {
                 </div>
               </div>
               <div className="space-y-6">
-                <h1 className="text-white text-l font-bold leading-tight italic">
+                <h1 className="text-white text-l font-bold leading-tight italic mt-4">
                   Apprenez avec les meilleurs Formateurs,
                   <img src="/images/globe.png" alt="Globe" className="inline-block w-9 h-9 mx-1 align-middle" />
                   partout dans le monde .
@@ -402,7 +402,7 @@ const Register = () => {
           </div>
         </div>
         {/* Colonne droite formulaire */}
-        <div className="w-[60%] flex items-center justify-center px-6 md:px-12 py-10">
+        <div className="w-full md:w-[60%] flex items-center justify-center px-6 py-10 bg-white">
           <div className="w-full max-w-lg bg-white/95 backdrop-blur-sm rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-8 md:p-12 flex flex-col relative">
             {/* Menu de langue */}
             <div className="absolute top-4 right-4">
@@ -446,9 +446,9 @@ const Register = () => {
                 </div>
               )}
             </div>
-            <form onSubmit={handleSubmit} className="w-full">
+            <form onSubmit={handleSubmit} className="w-full max-w-lg">
               <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-blue-500 bg-clip-text text-transparent capitalize">{t.title}</h2>
+                <h2 className="text-2xl font-bold  text-center mb-6 bg-gradient-to-r from-violet-600 to-blue-500 bg-clip-text text-transparent capitalize">{t.title}</h2>
                 <p className="text-gray-500 text-sm mt-2 normal-case">{t.subtitle}</p>
               </div>
               {errors.submit && (
@@ -457,8 +457,8 @@ const Register = () => {
                   <span className="normal-case">{errors.submit}</span>
                 </div>
               )}
-              <div className="space-y-3">
-                <div className="relative group">
+              <div className="space-y-4">
+                <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-violet-500 transition-colors"><FaUser /></span>
                   <input
                     type="text"
@@ -467,13 +467,13 @@ const Register = () => {
                     onChange={handleChange}
                     required
                     placeholder={t.fullName}
-                    className={`w-full pl-10 pr-3 py-2 border-2 rounded-xl focus:border-violet-500 bg-gray-50/50 text-sm placeholder-gray-400 transition-all duration-200 capitalize ${errors.fullName ? 'border-red-500' : 'border-gray-200 hover:border-violet-200'}`}
+                    className={`w-full pl-10 pr-4 py-2 border-2 rounded-lg focus:border-violet-500 bg-gray-50/50 text-sm placeholder-gray-400 transition-all duration-200 normal-case ${errors.email ? 'border-red-500' : 'border-gray-200 hover:border-violet-200'}`}
                     disabled={loading}
                   />
                   {errors.fullName && <p className="mt-1 text-xs text-red-500 normal-case">{errors.fullName}</p>}
                 </div>
-                <div className="relative group">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-violet-500 transition-colors"><FaEnvelope /></span>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-violet-500 transition-colors"><FaEnvelope /></span>
                   <input
                     type="email"
                     name="email"
@@ -481,13 +481,13 @@ const Register = () => {
                     onChange={handleChange}
                     required
                     placeholder={t.email}
-                    className={`w-full pl-10 pr-3 py-2 border-2 rounded-xl focus:border-violet-500 bg-gray-50/50 text-sm placeholder-gray-400 transition-all duration-200 normal-case ${errors.email ? 'border-red-500' : 'border-gray-200 hover:border-violet-200'}`}
+                    className={`w-full pl-10 pr-10 py-2 border-2 rounded-lg focus:border-violet-500 bg-gray-50/50 text-sm placeholder-gray-400 transition-all duration-200 normal-case ${errors.password ? 'border-red-500' : 'border-gray-200 hover:border-violet-200'}`}
                     disabled={loading}
                   />
                   {errors.email && <p className="mt-1 text-xs text-red-500 normal-case">{errors.email}</p>}
                 </div>
                 <div className="relative group">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-violet-500 transition-colors"><FaLock /></span>
+                  <span className="absolute w-full left-3 top-1/2 transform -translate-y-1/2 rounded-lg text-gray-400 group-focus-within:text-violet-500 transition-colors"><FaLock /></span>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     name="password"
@@ -495,7 +495,7 @@ const Register = () => {
                     onChange={handleChange}
                     required
                     placeholder={t.password}
-                    className={`w-full pl-10 pr-9 py-2 border-2 rounded-xl focus:border-violet-500 bg-gray-50/50 text-sm placeholder-gray-400 transition-all duration-200 normal-case ${errors.password ? 'border-red-500' : 'border-gray-200 hover:border-violet-200'}`}
+                    className={`w-full pl-10 pr-9 py-2 border-2 rounded-lg focus:border-violet-500 bg-gray-50/50 text-sm placeholder-gray-400 transition-all duration-200 normal-case ${errors.password ? 'border-red-500' : 'border-gray-200 hover:border-violet-200'}`}
                     disabled={loading}
                   />
                   <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-violet-600 transition-colors" tabIndex={-1}>
@@ -571,12 +571,12 @@ const Register = () => {
                 {isFirstTimeUser ? (
                   <>
                     {t.alreadyHaveAccount}{' '}
-                    <Link to="/login" className="text-violet-600 hover:text-violet-800 font-medium transition-colors capitalize">
+                    <Link to="/connexion" className="text-violet-600 hover:text-violet-800 font-medium transition-colors capitalize">
                       {t.login}
                     </Link>
                   </>
                 ) : (
-                  <Link to="/login" className="text-violet-600 hover:text-violet-800 font-medium transition-colors capitalize">
+                  <Link to="/connexion" className="text-violet-600 hover:text-violet-800 font-medium transition-colors capitalize">
                     {t.login}
                   </Link>
                 )}

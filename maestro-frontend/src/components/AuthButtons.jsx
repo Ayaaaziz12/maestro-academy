@@ -11,7 +11,7 @@ const AuthButtons = ({ className = '' }) => {
         whileTap={{ scale: 0.95 }}
       >
         <Link
-          to="/login"
+          to="/connexion"
           className="group relative px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 overflow-hidden"
         >
           {/* Fond avec dégradé */}
