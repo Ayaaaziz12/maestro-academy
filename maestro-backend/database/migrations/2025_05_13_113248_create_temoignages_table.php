@@ -10,17 +10,12 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('temoignages', function (Blueprint $table) {
-        $table->id();
-        $table->string('nom');
-        $table->string('contenu');
-        $table->string('formation')->nullable(); // Ex: ENSA, ISCAE, etc.
-        $table->string('photo')->nullable(); // facultatif
-        $table->timestamps();
-    });
-}
-
+    {
+        Schema::create('temoignages', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.

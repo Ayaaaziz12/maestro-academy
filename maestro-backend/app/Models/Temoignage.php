@@ -11,8 +11,11 @@ class Temoignage extends Model
 
     protected $fillable = [
         'nom',
+        'email',
         'contenu',
+        'rating',
         'formation',
         'photo',
+        'is_validated'
     ];
 }
