@@ -11,7 +11,7 @@ const TestimonialsSection = () => {
   }, []);
   const [currentSet, setCurrentSet] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [testimonials, setTestimonials] = useState([]); // Ensure testimonials is always an array
+  const [testimonials, setTestimonials] = useState([]); 
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -50,62 +50,92 @@ const TestimonialsSection = () => {
 };
 
 const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Validation côté client
-    if (!formData.nom.trim()) {
-        setSubmitStatus({
-            show: true,
-            message: 'Le nom est requis',
-            isError: true
-        });
-        return;
-    }
-    
-    if (!formData.contenu.trim() || formData.contenu.length < 10) {
-        setSubmitStatus({
-            show: true,
-            message: 'Le témoignage doit contenir au moins 10 caractères',
-            isError: true
-        });
-        return;
-    }
-    
-    if (formData.email && !formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-        setSubmitStatus({
-            show: true,
-            message: 'Veuillez entrer une adresse email valide',
-            isError: true
-        });
-        return;
+  e.preventDefault();
+
+  // Validation côté client
+  if (!formData.nom.trim()) {
+    setSubmitStatus({
+      show: true,
+      message: 'Le nom est requis',
+      isError: true
+    });
+    return;
+  }
+
+  if (!formData.contenu.trim() || formData.contenu.length < 10) {
+    setSubmitStatus({
+      show: true,
+      message: 'Le témoignage doit contenir au moins 10 caractères',
+      isError: true
+    });
+    return;
+  }
+
+  if (formData.email && !formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    setSubmitStatus({
+      show: true,
+      message: 'Veuillez entrer une adresse email valide',
+      isError: true
+    });
+    return;
+  }
+
+  try {
+    // 1. Fetch CSRF token
+    const csrfRes = await fetch('http://localhost:8000/csrf-token', {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    const csrfData = await csrfRes.json();
+    const csrfToken = csrfData.csrfToken;
+
+    if (!csrfToken) {
+      setSubmitStatus({
+        show: true,
+        message: 'CSRF token introuvable',
+        isError: true
+      });
+      return;
     }
 
-    try {
-        const response = await axios.post('api/temoignages', {
-            ...formData,
-            is_validated: false
-        });
-        
-        if (response.data?.success) {
-            setSubmitStatus({
-                show: true,
-                message: 'Merci pour votre témoignage ! Il sera affiché après validation par notre équipe.',
-                isError: false
-            });
-            setFormData({ nom: '', email: '', contenu: '', rating: 5 });
-            setShowForm(false);
-        } else {
-            throw new Error('Réponse invalide du serveur');
-        }
-    } catch (error) {
-        console.error('Erreur lors de la soumission du formulaire:', error);
-        const errorMessage = error.response?.data?.message || 'Une erreur est survenue. Veuillez réessayer.';
-        setSubmitStatus({
-            show: true,
-            message: errorMessage,
-            isError: true
-        });
+    // 2. Submit the form with the CSRF token
+    const response = await fetch('http://localhost:8000/api/temoignages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': csrfToken,
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        ...formData,
+        is_validated: false,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data?.success) {
+      setSubmitStatus({
+        show: true,
+        message: 'Merci pour votre témoignage ! Il sera affiché après validation par notre équipe.',
+        isError: false
+      });
+      setFormData({ nom: '', email: '', contenu: '', rating: 5 });
+      setShowForm(false);
+    } else {
+      throw new Error(data.message || 'Réponse invalide du serveur');
     }
+  } catch (error) {
+    console.error('Erreur lors de la soumission du formulaire:', error);
+    const errorMessage = error.message || 'Une erreur est survenue. Veuillez réessayer.';
+    setSubmitStatus({
+      show: true,
+      message: errorMessage,
+      isError: true
+    });
+  }
 };
 
   const handleInputChange = (e) => {

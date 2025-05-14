@@ -229,43 +229,63 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!validateForm()) {
       return;
     }
-
     setLoading(true);
-
     try {
-      const result = await register(
-        formData.email,
-        formData.password,
-        formData.fullName
-      );
+      const csrfResponse = await fetch('http://localhost:8000/csrf-token', {
+        method: 'GET',
+        credentials: 'include', 
+      });
       
-      if (result.success) {
-        // Marquer que l'utilisateur a créé un compte
+      const csrfData = await csrfResponse.json();
+      const csrfToken = csrfData.csrfToken;
+      
+      if (!csrfToken) {
+        setErrors({ submit: 'CSRF token not found' });
+        setLoading(false);
+        return;
+      }
+      
+      const response = await fetch('http://localhost:8000/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': csrfToken, 
+        },
+        credentials: 'include', 
+        body: JSON.stringify({
+          name: formData.fullName,
+          email: formData.email,
+          password: formData.password,
+          password_confirmation: formData.confirmPassword,
+        }),
+      });
+      
+      const data = await response.json();
+      if (response.ok) {
         localStorage.setItem('hasRegistered', 'true');
         setIsFirstTimeUser(false);
         navigate('/login');
       } else {
-        setErrors({ submit: result.error || 'Une erreur est survenue lors de l\'inscription' });
+        setErrors({ submit: data.message || 'Une erreur est survenue lors de l\'inscription' });
       }
-    } catch (err) {
+    } catch (error) {
       setErrors({ submit: 'Une erreur est survenue lors de l\'inscription' });
-      console.error('Register error:', err);
+      console.error('Register error:', error);
     } finally {
       setLoading(false);
     }
   };
-
+  
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
