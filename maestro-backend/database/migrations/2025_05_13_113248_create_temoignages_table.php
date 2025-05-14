@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('temoignages', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('nom');
+            $table->string('email')->nullable();
+            $table->text('contenu');
+            $table->unsignedTinyInteger('rating'); 
+            $table->boolean('is_validated')->default(false);
+            $table->timestamps(); 
         });
     }
 
